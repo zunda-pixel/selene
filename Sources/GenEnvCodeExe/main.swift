@@ -22,7 +22,7 @@ for line in lines {
 }
 
 let cipher: [UInt8] = (0..<64).map { _ in
-  UInt8.random(in: UInt8.min..<UInt8.max)
+  UInt8.random(in: UInt8.min...UInt8.max)
 }
 
 let uint8Properties = envValues.map {
