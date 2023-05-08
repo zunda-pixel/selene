@@ -4,25 +4,42 @@
 import PackageDescription
 
 let package = Package(
-    name: "ReadEnvironment",
-    products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "ReadEnvironment",
-            targets: ["ReadEnvironment"]),
-    ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .target(
-            name: "ReadEnvironment",
-            dependencies: []),
-        .testTarget(
-            name: "ReadEnvironmentTests",
-            dependencies: ["ReadEnvironment"]),
-    ]
+  name: "GenEnvCode",
+  products: [
+    // Products define the executables and libraries a package produces, and make them visible to other packages.
+    .plugin(
+      name: "GenEnvCode",
+      targets: ["GenEnvCode"]
+    ),
+    .executable(
+      name: "GenEnvCodeExe",
+      targets: ["GenEnvCodeExe"]
+    ),
+  ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-algorithms", branch: "main"),
+  ],
+  targets: [
+    .plugin(
+      name: "GenEnvCode",
+      capability: .command(
+        intent: .custom(verb: "generate-env", description: "Generate Source Code from Env File")
+      ),
+      dependencies: [
+        .target(name: "GenEnvCodeExe"),
+      ]
+    ),
+    .executableTarget(
+      name: "GenEnvCodeExe",
+      dependencies: [
+        .product(name: "Algorithms", package: "swift-algorithms")
+      ]
+    ),
+    .testTarget(
+      name: "GenEnvCodeTests",
+      dependencies: [
+        .target(name: "GenEnvCodeExe"),
+      ]
+    )
+  ]
 )
