@@ -38,7 +38,7 @@ let uint8Properties = envValues.map {
 
 let properties = envValues.map {
   return """
-  static var \($0.key): String {
+  static public var \($0.key): String {
     string(data: _\($0.key), cipher: cipher)
   }
 """
@@ -48,7 +48,7 @@ let file = """
 import Foundation
 import Algorithms
 
-enum Env {
+public enum Env {
   static private let cipher: [UInt8] = [
 \(string(data: cipher))
   ]
