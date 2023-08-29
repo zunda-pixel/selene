@@ -40,9 +40,7 @@ key2=value2
 """
     
     let values: [String: String] = environmentValues(content: content)
-    
-    print(values)
-    
+  
     XCTAssertEqual(values, ["key1": "value1", "key2": "value2"])
   }
   
