@@ -12,17 +12,22 @@ struct GenEnvCode: CommandPlugin {
     let tool = try context.tool(named: "GenEnvCodeExe")
     let toolPath = URL(fileURLWithPath: tool.path.string)
     
-    guard let envFilePath = arguments[safe: 0] else {
+    guard let namespace = arguments[safe: 0] else {
+      throw GenerateEnvironmentCodeError.noNameSpaceArgument
+    }
+
+    guard let envFilePath = arguments[safe: 1] else {
       throw GenerateEnvironmentCodeError.noEnvironmentFilePathArgument
     }
     
-    guard let exportFilePath = arguments[safe: 1] else {
+    guard let exportFilePath = arguments[safe: 2] else {
       throw GenerateEnvironmentCodeError.noExportFilePathArgument
     }
     
     let process = try Process.run(
       toolPath,
       arguments: [
+        namespace,
         envFilePath,
         exportFilePath,
       ]
@@ -38,6 +43,7 @@ extension Array {
 }
 
 enum GenerateEnvironmentCodeError: Error {
+  case noNameSpaceArgument
   case noEnvironmentFilePathArgument
   case noExportFilePathArgument
 }
