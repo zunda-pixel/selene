@@ -237,7 +237,7 @@ let source = SourceFileSyntax {
   }
 }
 
-let fileData = source.formatted().description.data(using: .utf8)!
+let fileData = Data(source.formatted().description.utf8)
 
 try fileData.write(to: exportFilePath)
 
