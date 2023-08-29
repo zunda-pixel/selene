@@ -41,12 +41,13 @@ EOL
 
 cd path/to/directory/on/Package.swift
 
-swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env path/to/env_file path/to/GeneratingEnv.swift
+swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env {namespace(ex: Env)} {path/to/env_file} {path/to/GeneratingEnv.swift}
 ```
 
 4. use Secure Value in Project
 
 ```swift
+print({set namespace}.clientID)
 print(Env.clientID)
 print(Env.clientSecret)
 ```
