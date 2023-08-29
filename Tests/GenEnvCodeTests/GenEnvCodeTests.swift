@@ -32,4 +32,36 @@ final class GenEnvCodeTests: XCTestCase {
     let output = String(decoding: decodedData, as: UTF8.self)
     XCTAssertEqual("K432dvFuaiXDb5byjxjd", output)
   }
+  
+  func testEnvironmentValues() {
+    let content = """
+key1=value1
+key2=value2
+"""
+    
+    let values: [String: String] = environmentValues(content: content)
+    
+    print(values)
+    
+    XCTAssertEqual(values, ["key1": "value1", "key2": "value2"])
+  }
+  
+  func testArrayExpr() {
+    let exprSyntax = arrayExpr(elements: [0x01, 0x02, 0x03, 0x04])
+    
+    XCTAssertEqual(exprSyntax.formatted().description, "[0x1, 0x2, 0x3, 0x4]")
+  }
+  
+  func testPublicKeyVariableKey() {
+    let variable = publicKeyVariableKey(key: "testKey")
+    
+    XCTAssertEqual(
+      variable.formatted().description,
+"""
+static public var testKey: String {
+    string(data: _testKey, cipher: cipher)
+}
+"""
+    )
+  }
 }
