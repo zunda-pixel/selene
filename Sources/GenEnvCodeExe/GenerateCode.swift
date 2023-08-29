@@ -21,14 +21,7 @@ struct GenerateCode: ParsableCommand {
 
     let envFileContent = try String(contentsOf: envFilePath)
 
-    let lines = envFileContent.split(whereSeparator: \.isNewline)
-
-    let environmentValues: [String: String] = lines.reduce(into: [:]) { dictionary, line in
-      let values = line.split(separator: "=")
-      let key = String(values[0])
-      let value = String(values[1])
-      dictionary[key] = value
-    }
+    let environmentValues: [String: String] = environmentValues(content: envFileContent)
 
     let cipher: [UInt8] = (0..<64).map { _ in
       UInt8.random(in: UInt8.min...UInt8.max)
@@ -40,6 +33,19 @@ struct GenerateCode: ParsableCommand {
 
     try fileData.write(to: outputFilePath)
   }
+}
+
+func environmentValues(content: String) -> [String: String] {
+  let lines = content.split(whereSeparator: \.isNewline)
+
+  let environmentValues: [String: String] = lines.reduce(into: [:]) { dictionary, line in
+    let values = line.split(separator: "=")
+    let key = String(values[0])
+    let value = String(values[1])
+    dictionary[key] = value
+  }
+  
+  return environmentValues
 }
 
 func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
