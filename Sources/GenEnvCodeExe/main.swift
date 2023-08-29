@@ -28,9 +28,8 @@ let cipher: [UInt8] = (0..<64).map { _ in
 }
 
 func privateKeyVariableKey(key: String, value: String) -> some DeclSyntaxProtocol {
-  let data = value.data(using: .utf8)!
-  let encodedData = encodeData(Array(data), cipher: cipher)
-  let value = string(data: encodedData)
+  let data: Data = Data(value.utf8)
+  let encodedData: [UInt8] = encodeData(Array(data), cipher: cipher)
   
   return VariableDeclSyntax(
     modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
@@ -41,7 +40,7 @@ func privateKeyVariableKey(key: String, value: String) -> some DeclSyntaxProtoco
         typeAnnotation: TypeAnnotation(
           type: TypeSyntax("[UInt8]")
         ),
-        initializer: InitializerClauseSyntax(value: ExprSyntax("[\(raw: value)]"))
+        initializer: InitializerClauseSyntax(value: arrayExpr(elements: encodedData))
       )
     })
   )
@@ -76,6 +75,17 @@ func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
   )
 }
 
+func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
+  ArrayExprSyntax {
+    ArrayElementList {
+      for element in elements {
+        ArrayElement(expression: IntegerLiteralExprSyntax(digits: .identifier(String(format: "0x%x", element))))
+      }
+    }
+  }
+}
+
+
 let source = SourceFileSyntax {
   for name in ["Algorithms", "Foundation"] {
     ImportDeclSyntax(path: AccessPathSyntax([AccessPathComponentSyntax(name: name)]))
@@ -94,7 +104,7 @@ let source = SourceFileSyntax {
           typeAnnotation: TypeAnnotation(
             type: TypeSyntax("[UInt8]")
           ),
-          initializer: .init(value: ExprSyntax("[\(raw: string(data: cipher))]"))
+          initializer: .init(value: arrayExpr(elements: cipher))
         ),
       ])
     )
@@ -232,18 +242,7 @@ let fileData = source.formatted().description.data(using: .utf8)!
 try fileData.write(to: exportFilePath)
 
 func encodeData(_ data: [UInt8], cipher: [UInt8]) -> [UInt8] {
-  data.enumerated().map { offset, element in
+  data.indexed().map { offset, element in
     element ^ cipher[offset % cipher.count]
   }
-}
-
-func string(data: [UInt8]) -> String {
-  let chunkCipher = data.chunks(ofCount: 8)
-  
-  let lines = chunkCipher.map { chunk in
-    let values = chunk.map { String(format: "0x%x", $0) }
-    return values.joined(separator: ", ")
-  }
-  
-  return lines.joined(separator: ",\n")
 }
