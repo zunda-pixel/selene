@@ -1,4 +1,4 @@
-name: Swift ${{ matrix.swift }}
+name: Swift ${{ jobs.build.strategy.matrix.swift }}
 on: [push]
 
 jobs:
