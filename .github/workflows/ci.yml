@@ -1,4 +1,5 @@
 name: Swift ${{ matrix.swift }}
+on: [push]
 runs-on: ${{ matrix.os }}
 
 strategy:
