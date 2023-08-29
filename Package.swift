@@ -23,6 +23,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-algorithms", .upToNextMajor(from: "1.0.0")),
     .package(url: "https://github.com/apple/swift-syntax", exact: "508.0.1"),
+    .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.2.3")),
   ],
   targets: [
     .plugin(
@@ -40,6 +41,7 @@ let package = Package(
         .product(name: "Algorithms", package: "swift-algorithms"),
         .product(name: "SwiftSyntax", package: "swift-syntax"),
         .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ]
     ),
     .testTarget(
