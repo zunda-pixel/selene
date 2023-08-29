@@ -4,8 +4,9 @@ import Algorithms
 import SwiftSyntax
 import SwiftSyntaxBuilder
 
-let envFilePathString = CommandLine.arguments[1]
-let exportFilePathString = CommandLine.arguments[2]
+let namespace = CommandLine.arguments[1]
+let envFilePathString = CommandLine.arguments[2]
+let exportFilePathString = CommandLine.arguments[3]
 
 let envFilePath = URL(fileURLWithPath: envFilePathString, isDirectory: false)
 let exportFilePath = URL(fileURLWithPath: exportFilePathString, isDirectory: false)
@@ -98,7 +99,7 @@ let source = SourceFileSyntax {
   
   EnumDeclSyntax(
     modifiers: [DeclModifierSyntax(name: .public)],
-    identifier: "Env"
+    identifier: namespace
   ) {
     VariableDeclSyntax(
       modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
