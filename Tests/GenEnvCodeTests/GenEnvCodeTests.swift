@@ -3,7 +3,7 @@ import XCTest
 
 final class GenEnvCodeTests: XCTestCase {
   func testEncodeAndDecode() {
-    let cipher: [UInt8] = (0..<64).map { _ in UInt8.random(in: UInt8.min..<UInt8.max) }
+    let cipher: [UInt8] = generateCipher(count: 64)
     let input = "Hello"
     let inputData = Data(input.utf8)
     let encodedData = encodeData(Array(inputData), cipher: cipher)
