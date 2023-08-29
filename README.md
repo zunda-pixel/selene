@@ -16,9 +16,9 @@ add the following line to the dependencies in your `Package.swift` file:
 1. add GenEnvCode as a Dependency
 2. set Secure Key/Value on Xcode Cloud Environment
 
-/var/folders/ss/4j4m9qr121x1nrl9kf3c_n7h0000gn/T/TemporaryItems/NSIRD_screencaptureui_0Ik0R2/screenshot-2023-08-29-22.13.38.png
+<img width="300" alt="xcode-cloud-environment-sample" src="https://github.com/zunda-pixel/GenEnvCode/assets/47569369/09753556-f470-4ecd-b1e5-3aa00fa1f81f">
 
-3. add ci_scripts/ci_post_clone.sh
+3. add ci_scripts/ci_post_clone.sh [Apple Documents](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts)
 
 ```shell
 #!/bin/sh
@@ -39,11 +39,9 @@ clientID=${CLIENT_ID}
 clientSecret=${CLIENT_SECRET}
 EOL
 
-projectPath=$(pwd)
+cd path/to/directory/on/Package.swift
 
-cd path/to/Directory/on/Package.swift
-
-swift package plugin --allow-writing-to-directory Sources generate-env ../${env_file} path/to/Env.swift
+swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env path/to/env_file path/to/GeneratingEnv.swift
 ```
 
 4. use Secure Key/Value in Project
