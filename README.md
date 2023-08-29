@@ -32,7 +32,7 @@ cd ..
 env_file=".env"
 touch $env_file
 
-## set key/value as Step 2
+## set Key/Value as Step 2
 
 cat > $env_file <<EOL
 clientID=${CLIENT_ID}
@@ -44,7 +44,7 @@ cd path/to/directory/on/Package.swift
 swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env path/to/env_file path/to/GeneratingEnv.swift
 ```
 
-4. use Secure Key/Value in Project
+4. use Secure Value in Project
 
 ```swift
 print(Env.clientID)
