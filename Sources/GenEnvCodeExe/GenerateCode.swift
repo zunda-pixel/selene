@@ -23,15 +23,19 @@ struct GenerateCode: ParsableCommand {
 
     let environmentValues: [String: String] = environmentValues(content: envFileContent)
 
-    let cipher: [UInt8] = (0..<64).map { _ in
-      UInt8.random(in: UInt8.min...UInt8.max)
-    }
+    let cipher: [UInt8] = generateCipher(count: 64)
     
     let source = source(namespace: namespace, cipher: cipher, envValues: environmentValues)
     
     let fileData = Data(source.formatted().description.utf8)
 
     try fileData.write(to: outputFilePath)
+  }
+}
+
+func generateCipher(count: Int) -> [UInt8] {
+  (0..<count).map { _ in
+    UInt8.random(in: UInt8.min...UInt8.max)
   }
 }
 
