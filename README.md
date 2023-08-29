@@ -14,9 +14,9 @@ add the following line to the dependencies in your `Package.swift` file:
 ## Use GenEnvCode on XcodeCloud
 
 1. add GenEnvCode as a Dependency
-2. set Secure Key/Value on Xcode Cloud Environment
+2. set Secure Key/Value on Xcode Cloud `Environment Variable`
 
-<img width="300" alt="xcode-cloud-environment-sample" src="https://github.com/zunda-pixel/GenEnvCode/assets/47569369/09753556-f470-4ecd-b1e5-3aa00fa1f81f">
+<img width="500" alt="xcode-cloud-environment-sample" src="https://github.com/zunda-pixel/GenEnvCode/assets/47569369/09753556-f470-4ecd-b1e5-3aa00fa1f81f">
 
 3. add ci_scripts/ci_post_clone.sh [Apple Documents](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts)
 
