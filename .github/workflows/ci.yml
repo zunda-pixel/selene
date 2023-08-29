@@ -1,11 +1,13 @@
-name: SwiftTest
+name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+runs-on: ${{ matrix.os }}
 
-on: [push]
-
-jobs:
-  build:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run tests
-        run: swift test
+strategy:
+  matrix:
+    os: [ubuntu-latest, macos-latest]
+    swift: ["5.8.1"]
+  steps:
+    - uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift }}
+    - name: Get swift version
+      run: swift --version
