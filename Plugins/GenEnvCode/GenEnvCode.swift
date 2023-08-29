@@ -4,7 +4,6 @@
 
 import PackagePlugin
 import Foundation
-import os
 
 @main
 struct GenEnvCode: CommandPlugin {
@@ -13,15 +12,15 @@ struct GenEnvCode: CommandPlugin {
     let toolPath = URL(fileURLWithPath: tool.path.string)
     
     guard let namespace = arguments[safe: 0] else {
-      throw GenerateEnvironmentCodeError.noNameSpaceArgument
+      throw ArgumentError.noNameSpaceArgument
     }
 
     guard let envFilePath = arguments[safe: 1] else {
-      throw GenerateEnvironmentCodeError.noEnvironmentFilePathArgument
+      throw ArgumentError.noEnvironmentFilePathArgument
     }
     
-    guard let exportFilePath = arguments[safe: 2] else {
-      throw GenerateEnvironmentCodeError.noExportFilePathArgument
+    guard let outputFilePath = arguments[safe: 2] else {
+      throw ArgumentError.noOutputFilePathArgument
     }
     
     let process = try Process.run(
@@ -29,7 +28,7 @@ struct GenEnvCode: CommandPlugin {
       arguments: [
         namespace,
         envFilePath,
-        exportFilePath,
+        outputFilePath,
       ]
     )
     process.waitUntilExit()
@@ -42,8 +41,16 @@ extension Array {
   }
 }
 
-enum GenerateEnvironmentCodeError: Error {
+enum ArgumentError: Error, LocalizedError {
   case noNameSpaceArgument
   case noEnvironmentFilePathArgument
-  case noExportFilePathArgument
+  case noOutputFilePathArgument
+  
+  var helpAnchor: String {
+    switch self {
+    case .noNameSpaceArgument: "Generating Namespace(ex: SecureEnv)."
+    case .noEnvironmentFilePathArgument: "Env file path."
+    case .noOutputFilePathArgument: "Output file path."
+    }
+  }
 }
