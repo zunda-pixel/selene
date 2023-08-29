@@ -27,6 +27,22 @@ let cipher: [UInt8] = (0..<64).map { _ in
   UInt8.random(in: UInt8.min...UInt8.max)
 }
 
+func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
+  ArrayExprSyntax {
+    ArrayElementList {
+      for element in elements {
+        ArrayElement(expression: IntegerLiteralExprSyntax(digits: .identifier(String(format: "0x%x", element))))
+      }
+    }
+  }
+}
+
+func encodeData(_ data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+  data.indexed().map { offset, element in
+    element ^ cipher[offset % cipher.count]
+  }
+}
+
 func privateKeyVariableKey(key: String, value: String) -> some DeclSyntaxProtocol {
   let data: Data = Data(value.utf8)
   let encodedData: [UInt8] = encodeData(Array(data), cipher: cipher)
@@ -74,17 +90,6 @@ func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
     })
   )
 }
-
-func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
-  ArrayExprSyntax {
-    ArrayElementList {
-      for element in elements {
-        ArrayElement(expression: IntegerLiteralExprSyntax(digits: .identifier(String(format: "0x%x", element))))
-      }
-    }
-  }
-}
-
 
 let source = SourceFileSyntax {
   for name in ["Algorithms", "Foundation"] {
@@ -240,9 +245,3 @@ let source = SourceFileSyntax {
 let fileData = Data(source.formatted().description.utf8)
 
 try fileData.write(to: exportFilePath)
-
-func encodeData(_ data: [UInt8], cipher: [UInt8]) -> [UInt8] {
-  data.indexed().map { offset, element in
-    element ^ cipher[offset % cipher.count]
-  }
-}
