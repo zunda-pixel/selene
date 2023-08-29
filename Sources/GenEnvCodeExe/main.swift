@@ -106,78 +106,78 @@ let source = SourceFileSyntax {
     for item in envValues {
       publicKeyVariableKey(key: item.key)
     }
-
+    
     FunctionDeclSyntax(
-        modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-        identifier: TokenSyntax.identifier("string"),
-        signature: FunctionSignatureSyntax(
-          input: ParameterClauseSyntax(
-            parameterList: FunctionParameterListSyntax {
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("data"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("cipher"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-            }
-          ),
-          output: ReturnClauseSyntax(
-            returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("String"))
-          )
-        )
-      ) {
-        ReturnStmtSyntax(
-          expression: FunctionCallExpr(callee: MemberAccessExpr(base: .init(stringLiteral: "String"), name: "init")) {
-            TupleExprElementSyntax(
-              label: .identifier("decoding"),
+      modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
+      identifier: TokenSyntax.identifier("string"),
+      signature: FunctionSignatureSyntax(
+        input: ParameterClauseSyntax(
+          parameterList: FunctionParameterListSyntax {
+            FunctionParameterSyntax(
+              firstName: TokenSyntax.identifier("data"),
               colon: .colonToken(),
-              expression: FunctionCallExpr(callee: MemberAccessExpr(dot: .identifier(""), name: "encodeData")) {
-                TupleExprElementSyntax(
-                  label: .identifier("data"),
-                  colon: .colonToken(),
-                  expression: IdentifierExprSyntax(identifier: .identifier("data"))
-                )
-                TupleExprElementSyntax(
-                  label: .identifier("cipher"),
-                  colon: .colonToken(),
-                  expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
-                )
-              }
+              type: TypeSyntax("[UInt8]")
             )
-            TupleExprElementSyntax(
-              label: .identifier("as"),
+            FunctionParameterSyntax(
+              firstName: TokenSyntax.identifier("cipher"),
               colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("UTF8.self"))
+              type: TypeSyntax("[UInt8]")
             )
           }
+        ),
+        output: ReturnClauseSyntax(
+          returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("String"))
         )
-      }
-    FunctionDeclSyntax(
-        modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-        identifier: TokenSyntax.identifier("encodeData"),
-        signature: FunctionSignatureSyntax(
-          input: ParameterClauseSyntax(
-            parameterList: FunctionParameterListSyntax {
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("data"),
+      )
+    ) {
+      ReturnStmtSyntax(
+        expression: FunctionCallExpr(callee: MemberAccessExpr(base: .init(stringLiteral: "String"), name: "init")) {
+          TupleExprElementSyntax(
+            label: .identifier("decoding"),
+            colon: .colonToken(),
+            expression: FunctionCallExpr(callee: MemberAccessExpr(dot: .identifier(""), name: "encodeData")) {
+              TupleExprElementSyntax(
+                label: .identifier("data"),
                 colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
+                expression: IdentifierExprSyntax(identifier: .identifier("data"))
               )
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("cipher"),
+              TupleExprElementSyntax(
+                label: .identifier("cipher"),
                 colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
+                expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
               )
             }
-          ),
-          output: ReturnClauseSyntax(
-            returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("[UInt8]"))
           )
+          TupleExprElementSyntax(
+            label: .identifier("as"),
+            colon: .colonToken(),
+            expression: IdentifierExprSyntax(identifier: .identifier("UTF8.self"))
+          )
+        }
+      )
+    }
+    FunctionDeclSyntax(
+      modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
+      identifier: TokenSyntax.identifier("encodeData"),
+      signature: FunctionSignatureSyntax(
+        input: ParameterClauseSyntax(
+          parameterList: FunctionParameterListSyntax {
+            FunctionParameterSyntax(
+              firstName: TokenSyntax.identifier("data"),
+              colon: .colonToken(),
+              type: TypeSyntax("[UInt8]")
+            )
+            FunctionParameterSyntax(
+              firstName: TokenSyntax.identifier("cipher"),
+              colon: .colonToken(),
+              type: TypeSyntax("[UInt8]")
+            )
+          }
+        ),
+        output: ReturnClauseSyntax(
+          returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("[UInt8]"))
         )
+      )
     ) {
       FunctionCallExprSyntax(
         calledExpression: MemberAccessExprSyntax(
