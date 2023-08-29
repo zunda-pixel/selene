@@ -5,7 +5,7 @@ final class GenEnvCodeTests: XCTestCase {
   func testEncodeAndDecode() {
     let cipher: [UInt8] = (0..<64).map { _ in UInt8.random(in: UInt8.min..<UInt8.max) }
     let input = "Hello"
-    let inputData = input.data(using: .utf8)!
+    let inputData = Data(input.utf8)
     let encodedData = encodeData(Array(inputData), cipher: cipher)
     let decodedData = encodeData(encodedData, cipher: cipher)
     let output = String(decoding: decodedData, as: UTF8.self)
