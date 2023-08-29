@@ -18,6 +18,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-algorithms", branch: "main"),
+    .package(url: "https://github.com/apple/swift-syntax", exact: "508.0.1"),
   ],
   targets: [
     .plugin(
@@ -32,7 +33,9 @@ let package = Package(
     .executableTarget(
       name: "GenEnvCodeExe",
       dependencies: [
-        .product(name: "Algorithms", package: "swift-algorithms")
+        .product(name: "Algorithms", package: "swift-algorithms"),
+        .product(name: "SwiftSyntax", package: "swift-syntax"),
+        .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
       ]
     ),
     .testTarget(
