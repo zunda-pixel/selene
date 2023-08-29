@@ -23,20 +23,18 @@ struct GenerateCode: ParsableCommand {
 
     let lines = envFileContent.split(whereSeparator: \.isNewline)
 
-    var envValues: [String: String] = [:]
-
-    for line in lines {
+    let environmentValues: [String: String] = lines.reduce(into: [:]) { dictionary, line in
       let values = line.split(separator: "=")
       let key = String(values[0])
       let value = String(values[1])
-      envValues[key] = value
+      dictionary[key] = value
     }
 
     let cipher: [UInt8] = (0..<64).map { _ in
       UInt8.random(in: UInt8.min...UInt8.max)
     }
     
-    let source = source(namespace: namespace, cipher: cipher, envValues: envValues)
+    let source = source(namespace: namespace, cipher: cipher, envValues: environmentValues)
     
     let fileData = Data(source.formatted().description.utf8)
 
