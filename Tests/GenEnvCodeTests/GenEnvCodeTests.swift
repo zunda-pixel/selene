@@ -64,4 +64,12 @@ static public var testKey: String {
 """
     )
   }
+  
+  func testCipherVariable() {
+    let variable = cipherVariable(cipher: [0x01, 0x02, 0x03, 0x04])
+    XCTAssertEqual(
+      variable.formatted().description,
+      "static private let cipher: [UInt8] = [0x1, 0x2, 0x3, 0x4]"
+    )
+  }
 }
