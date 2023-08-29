@@ -214,28 +214,26 @@ let source = SourceFileSyntax {
             ])),
             inTok: .inKeyword(leadingTrivia: .space)
           ),
-          statements: CodeBlockItemListSyntax([
-            CodeBlockItemSyntax(
-              item: .init(ReturnStmtSyntax(
-                expression: SequenceExprSyntax {
-                  ExprListSyntax {
-                    IdentifierExprSyntax(identifier: .identifier("element"))
-                    BinaryOperatorExprSyntax(operatorToken: TokenSyntax.identifier("^"))
-                    SubscriptExprSyntax(
-                      calledExpression: IdentifierExprSyntax(identifier: .identifier("cipher")),
-                      argumentList: TupleExprElementListSyntax([.init(expression: SequenceExprSyntax {
-                        ExprListSyntax {
-                          IdentifierExprSyntax(identifier: .identifier("offset"))
-                          BinaryOperatorExprSyntax(operatorToken: TokenSyntax.spacedBinaryOperator("%"))
-                          MemberAccessExprSyntax(base: .init(stringLiteral: "cipher"), name: "count")
-                        }
-                      })])
-                    )
-                  }
+          statements: CodeBlockItemListSyntax {
+            ReturnStmtSyntax(
+              expression: SequenceExprSyntax {
+                ExprListSyntax {
+                  IdentifierExprSyntax(identifier: .identifier("element"))
+                  BinaryOperatorExprSyntax(operatorToken: TokenSyntax.identifier("^"))
+                  SubscriptExprSyntax(
+                    calledExpression: IdentifierExprSyntax(identifier: .identifier("cipher")),
+                    argumentList: TupleExprElementListSyntax([.init(expression: SequenceExprSyntax {
+                      ExprListSyntax {
+                        IdentifierExprSyntax(identifier: .identifier("offset"))
+                        BinaryOperatorExprSyntax(operatorToken: TokenSyntax.spacedBinaryOperator("%"))
+                        MemberAccessExprSyntax(base: .init(stringLiteral: "cipher"), name: "count")
+                      }
+                    })])
+                  )
                 }
-              ))
+              }
             )
-          ])
+          }
         )
       )
     }
