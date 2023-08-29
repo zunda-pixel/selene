@@ -122,19 +122,7 @@ func source(namespace: String, cipher: [UInt8], envValues: [String: String]) -> 
       modifiers: [DeclModifierSyntax(name: .public)],
       identifier: namespace
     ) {
-      VariableDeclSyntax(
-        modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
-        letOrVarKeyword: Token.let,
-        bindings: .init([
-          PatternBindingSyntax(
-            pattern: PatternSyntax(stringLiteral: "cipher"),
-            typeAnnotation: TypeAnnotation(
-              type: TypeSyntax("[UInt8]")
-            ),
-            initializer: .init(value: arrayExpr(elements: cipher))
-          ),
-        ])
-      )
+      cipherVariable(cipher: cipher)
       
       for (key, value) in envValues {
         privateKeyVariableKey(key: key, value: value, cipher: cipher)
@@ -144,121 +132,146 @@ func source(namespace: String, cipher: [UInt8], envValues: [String: String]) -> 
         publicKeyVariableKey(key: item.key)
       }
       
-      FunctionDeclSyntax(
-        modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-        identifier: TokenSyntax.identifier("string"),
-        signature: FunctionSignatureSyntax(
-          input: ParameterClauseSyntax(
-            parameterList: FunctionParameterListSyntax {
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("data"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("cipher"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-            }
-          ),
-          output: ReturnClauseSyntax(
-            returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("String"))
+      stringFunction()
+      
+      encodeDataFunction()
+    }
+  }
+}
+
+func cipherVariable(cipher: [UInt8]) -> some DeclSyntaxProtocol {
+  VariableDeclSyntax(
+    modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
+    letOrVarKeyword: Token.let,
+    bindings: .init([
+      PatternBindingSyntax(
+        pattern: PatternSyntax(stringLiteral: "cipher"),
+        typeAnnotation: TypeAnnotation(
+          type: TypeSyntax("[UInt8]")
+        ),
+        initializer: .init(value: arrayExpr(elements: cipher))
+      ),
+    ])
+  )
+}
+
+func stringFunction() -> some DeclSyntaxProtocol {
+  FunctionDeclSyntax(
+    modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
+    identifier: TokenSyntax.identifier("string"),
+    signature: FunctionSignatureSyntax(
+      input: ParameterClauseSyntax(
+        parameterList: FunctionParameterListSyntax {
+          FunctionParameterSyntax(
+            firstName: TokenSyntax.identifier("data"),
+            colon: .colonToken(),
+            type: TypeSyntax("[UInt8]")
           )
-        )
-      ) {
-        ReturnStmtSyntax(
-          expression: FunctionCallExpr(callee: MemberAccessExpr(base: .init(stringLiteral: "String"), name: "init")) {
+          FunctionParameterSyntax(
+            firstName: TokenSyntax.identifier("cipher"),
+            colon: .colonToken(),
+            type: TypeSyntax("[UInt8]")
+          )
+        }
+      ),
+      output: ReturnClauseSyntax(
+        returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("String"))
+      )
+    )
+  ) {
+    ReturnStmtSyntax(
+      expression: FunctionCallExpr(callee: MemberAccessExpr(base: .init(stringLiteral: "String"), name: "init")) {
+        TupleExprElementSyntax(
+          label: .identifier("decoding"),
+          colon: .colonToken(),
+          expression: FunctionCallExpr(callee: MemberAccessExpr(dot: .identifier(""), name: "encodeData")) {
             TupleExprElementSyntax(
-              label: .identifier("decoding"),
+              label: .identifier("data"),
               colon: .colonToken(),
-              expression: FunctionCallExpr(callee: MemberAccessExpr(dot: .identifier(""), name: "encodeData")) {
-                TupleExprElementSyntax(
-                  label: .identifier("data"),
-                  colon: .colonToken(),
-                  expression: IdentifierExprSyntax(identifier: .identifier("data"))
-                )
-                TupleExprElementSyntax(
-                  label: .identifier("cipher"),
-                  colon: .colonToken(),
-                  expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
-                )
-              }
+              expression: IdentifierExprSyntax(identifier: .identifier("data"))
             )
             TupleExprElementSyntax(
-              label: .identifier("as"),
+              label: .identifier("cipher"),
               colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("UTF8.self"))
+              expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
             )
           }
         )
-      }
-      FunctionDeclSyntax(
-        modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-        identifier: TokenSyntax.identifier("encodeData"),
-        signature: FunctionSignatureSyntax(
-          input: ParameterClauseSyntax(
-            parameterList: FunctionParameterListSyntax {
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("data"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-              FunctionParameterSyntax(
-                firstName: TokenSyntax.identifier("cipher"),
-                colon: .colonToken(),
-                type: TypeSyntax("[UInt8]")
-              )
-            }
-          ),
-          output: ReturnClauseSyntax(
-            returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("[UInt8]"))
-          )
+        TupleExprElementSyntax(
+          label: .identifier("as"),
+          colon: .colonToken(),
+          expression: IdentifierExprSyntax(identifier: .identifier("UTF8.self"))
         )
-      ) {
-        FunctionCallExprSyntax(
+      }
+    )
+  }
+}
+
+func encodeDataFunction() -> some DeclSyntaxProtocol {
+  FunctionDeclSyntax(
+    modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
+    identifier: TokenSyntax.identifier("encodeData"),
+    signature: FunctionSignatureSyntax(
+      input: ParameterClauseSyntax(
+        parameterList: FunctionParameterListSyntax {
+          FunctionParameterSyntax(
+            firstName: TokenSyntax.identifier("data"),
+            colon: .colonToken(),
+            type: TypeSyntax("[UInt8]")
+          )
+          FunctionParameterSyntax(
+            firstName: TokenSyntax.identifier("cipher"),
+            colon: .colonToken(),
+            type: TypeSyntax("[UInt8]")
+          )
+        }
+      ),
+      output: ReturnClauseSyntax(
+        returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("[UInt8]"))
+      )
+    )
+  ) {
+    FunctionCallExprSyntax(
+      calledExpression: MemberAccessExprSyntax(
+        base: .init(FunctionCallExprSyntax(
           calledExpression: MemberAccessExprSyntax(
-            base: .init(FunctionCallExprSyntax(
-              calledExpression: MemberAccessExprSyntax(
-                base: .init(stringLiteral: "data"),
-                name: "indexed"
-              ),
-              leftParen: .identifier("("),
-              rightParen: .identifier(")")
-            )),
-            name: "map"
+            base: .init(stringLiteral: "data"),
+            name: "indexed"
           ),
-          trailingClosure: ClosureExprSyntax(
-            signature: .init(
-              input: .simpleInput(.init([
-                .init(name: .identifier("offset"), trailingComma: .commaToken(trailingTrivia: .space)),
-                .init(name: .identifier("element"))
-              ])),
-              inTok: .inKeyword(leadingTrivia: .space)
-            ),
-            statements: CodeBlockItemListSyntax {
-              ReturnStmtSyntax(
-                expression: SequenceExprSyntax {
-                  ExprListSyntax {
-                    IdentifierExprSyntax(identifier: .identifier("element"))
-                    BinaryOperatorExprSyntax(operatorToken: TokenSyntax.identifier("^"))
-                    SubscriptExprSyntax(
-                      calledExpression: IdentifierExprSyntax(identifier: .identifier("cipher")),
-                      argumentList: TupleExprElementListSyntax([.init(expression: SequenceExprSyntax {
-                        ExprListSyntax {
-                          IdentifierExprSyntax(identifier: .identifier("offset"))
-                          BinaryOperatorExprSyntax(operatorToken: TokenSyntax.spacedBinaryOperator("%"))
-                          MemberAccessExprSyntax(base: .init(stringLiteral: "cipher"), name: "count")
-                        }
-                      })])
-                    )
-                  }
-                }
-              )
+          leftParen: .identifier("("),
+          rightParen: .identifier(")")
+        )),
+        name: "map"
+      ),
+      trailingClosure: ClosureExprSyntax(
+        signature: .init(
+          input: .simpleInput(.init([
+            .init(name: .identifier("offset"), trailingComma: .commaToken(trailingTrivia: .space)),
+            .init(name: .identifier("element"))
+          ])),
+          inTok: .inKeyword(leadingTrivia: .space)
+        ),
+        statements: CodeBlockItemListSyntax {
+          ReturnStmtSyntax(
+            expression: SequenceExprSyntax {
+              ExprListSyntax {
+                IdentifierExprSyntax(identifier: .identifier("element"))
+                BinaryOperatorExprSyntax(operatorToken: TokenSyntax.identifier("^"))
+                SubscriptExprSyntax(
+                  calledExpression: IdentifierExprSyntax(identifier: .identifier("cipher")),
+                  argumentList: TupleExprElementListSyntax([.init(expression: SequenceExprSyntax {
+                    ExprListSyntax {
+                      IdentifierExprSyntax(identifier: .identifier("offset"))
+                      BinaryOperatorExprSyntax(operatorToken: TokenSyntax.spacedBinaryOperator("%"))
+                      MemberAccessExprSyntax(base: .init(stringLiteral: "cipher"), name: "count")
+                    }
+                  })])
+                )
+              }
             }
           )
-        )
-      }
-    }
+        }
+      )
+    )
   }
 }
