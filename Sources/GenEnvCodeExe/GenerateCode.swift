@@ -146,17 +146,14 @@ func source(namespace: String, cipher: [UInt8], envValues: [String: String]) -> 
 
 func cipherVariable(cipher: [UInt8]) -> some DeclSyntaxProtocol {
   VariableDeclSyntax(
-    modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
-    letOrVarKeyword: Token.let,
-    bindings: .init([
-      PatternBindingSyntax(
-        pattern: PatternSyntax(stringLiteral: "cipher"),
-        typeAnnotation: TypeAnnotation(
-          type: TypeSyntax("[UInt8]")
-        ),
-        initializer: .init(value: arrayExpr(elements: cipher))
-      ),
-    ])
+    modifiers: [
+      DeclModifierSyntax(name: .keyword(.static)),
+      DeclModifierSyntax(name: .keyword(.private))
+    ],
+    Keyword.let,
+    name: PatternSyntax(stringLiteral: "cipher"),
+    type: TypeAnnotationSyntax(type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))),
+    initializer: InitializerClauseSyntax(value: arrayExpr(elements: cipher))
   )
 }
 
