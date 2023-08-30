@@ -90,30 +90,27 @@ func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
       DeclModifierSyntax(name: .keyword(.static)),
       DeclModifierSyntax(name: .keyword(.public))
     ],
-    bindingSpecifier: .keyword(.var),
-    bindings: [
-      PatternBindingSyntax(
-        pattern: PatternSyntax(stringLiteral: key),
-        typeAnnotation: TypeAnnotationSyntax(
-          type: TypeSyntax("String")
-        ),
-        accessorBlock: AccessorBlockSyntax(accessors: .getter(CodeBlockItemListSyntax {
-            FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("string"))) {
-              LabeledExprSyntax(
-                label: .identifier("data"),
-                colon: .colonToken(),
-                expression: DeclReferenceExprSyntax(baseName: .identifier("_\(key)"))
-              )
-              LabeledExprSyntax(
-                label: .identifier("cipher"),
-                colon: .colonToken(),
-                expression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))
-              )
-            }
-        }))
-      )
-    ]
-  )
+    bindingSpecifier: .keyword(.var)
+  ) {
+    PatternBindingSyntax(
+      pattern: PatternSyntax(stringLiteral: key),
+      typeAnnotation: TypeAnnotationSyntax(type: TypeSyntax("String")),
+      accessorBlock: AccessorBlockSyntax(accessors: .getter(CodeBlockItemListSyntax {
+        FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("string"))) {
+          LabeledExprSyntax(
+            label: .identifier("data"),
+            colon: .colonToken(),
+            expression: DeclReferenceExprSyntax(baseName: .identifier("_\(key)"))
+          )
+          LabeledExprSyntax(
+            label: .identifier("cipher"),
+            colon: .colonToken(),
+            expression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))
+          )
+        }
+      }))
+    )
+  }
 }
 
 func source(namespace: String, cipher: [UInt8], envValues: [String: String]) -> SourceFileSyntax {
