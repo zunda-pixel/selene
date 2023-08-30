@@ -54,10 +54,8 @@ func environmentValues(content: String) -> [String: String] {
 
 func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
   ArrayExprSyntax {
-    ArrayElementList {
-      for element in elements {
-        ArrayElement(expression: IntegerLiteralExprSyntax(digits: .identifier(String(format: "0x%x", element))))
-      }
+    for element in elements {
+      ArrayElementSyntax(expression: IntegerLiteralExprSyntax(literal: .identifier(String(format: "0x%x", element))))
     }
   }
 }
