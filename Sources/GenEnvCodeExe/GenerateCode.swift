@@ -162,53 +162,58 @@ func cipherVariable(cipher: [UInt8]) -> some DeclSyntaxProtocol {
 
 func stringFunction() -> some DeclSyntaxProtocol {
   FunctionDeclSyntax(
-    modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-    identifier: TokenSyntax.identifier("string"),
+    modifiers: [
+      DeclModifierSyntax(name: .keyword(.static)),
+      DeclModifierSyntax(name: .keyword(.private)),
+    ],
+    name: .identifier("string"),
     signature: FunctionSignatureSyntax(
-      input: ParameterClauseSyntax(
-        parameterList: FunctionParameterListSyntax {
+      parameterClause: FunctionParameterClauseSyntax(
+        parameters: FunctionParameterListSyntax {
           FunctionParameterSyntax(
             firstName: TokenSyntax.identifier("data"),
             colon: .colonToken(),
-            type: TypeSyntax("[UInt8]")
+            type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
           )
           FunctionParameterSyntax(
             firstName: TokenSyntax.identifier("cipher"),
             colon: .colonToken(),
-            type: TypeSyntax("[UInt8]")
+            type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
           )
         }
       ),
-      output: ReturnClauseSyntax(
-        returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("String"))
+      returnClause: ReturnClauseSyntax(
+        type: IdentifierTypeSyntax(name: .identifier("String"))
       )
     )
   ) {
-    ReturnStmtSyntax(
-      expression: FunctionCallExpr(callee: MemberAccessExpr(base: .init(stringLiteral: "String"), name: "init")) {
-        TupleExprElementSyntax(
-          label: .identifier("decoding"),
-          colon: .colonToken(),
-          expression: FunctionCallExpr(callee: MemberAccessExpr(dot: .identifier(""), name: "encodeData")) {
-            TupleExprElementSyntax(
-              label: .identifier("data"),
-              colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("data"))
-            )
-            TupleExprElementSyntax(
-              label: .identifier("cipher"),
-              colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
-            )
-          }
-        )
-        TupleExprElementSyntax(
-          label: .identifier("as"),
-          colon: .colonToken(),
-          expression: IdentifierExprSyntax(identifier: .identifier("UTF8.self"))
-        )
-      }
-    )
+    FunctionCallExprSyntax(callee: MemberAccessExprSyntax(
+      base: DeclReferenceExprSyntax(baseName: .identifier("String")),
+      period: .periodToken(),
+      name: .identifier("init")
+    )) {
+      LabeledExprSyntax(
+        label: "decoding",
+        colon: .colonToken(),
+        expression: FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("encodeData"))) {
+          LabeledExprSyntax(
+            label: "data",
+            colon: .colonToken(),
+            expression: DeclReferenceExprSyntax(baseName: .identifier("data"))
+          )
+          LabeledExprSyntax(
+            label: "cipher",
+            colon: .colonToken(),
+            expression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))
+          )
+        }
+      )
+      LabeledExprSyntax(
+        label: "as",
+        colon: .colonToken(),
+        expression: DeclReferenceExprSyntax(baseName: .identifier("UTF8.self"))
+      )
+    }
   }
 }
 
