@@ -71,17 +71,16 @@ func privateKeyVariableKey(key: String, value: String, cipher: [UInt8]) -> some 
   let encodedData: [UInt8] = encodeData(Array(data), cipher: cipher)
   
   return VariableDeclSyntax(
-    modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.private)),
-    letOrVarKeyword: Token.let,
-    bindings: .init(itemsBuilder: {
-      PatternBinding(
-        pattern: PatternSyntax(stringLiteral: "_\(key)"),
-        typeAnnotation: TypeAnnotation(
-          type: TypeSyntax("[UInt8]")
-        ),
-        initializer: InitializerClauseSyntax(value: arrayExpr(elements: encodedData))
-      )
-    })
+    modifiers: [
+      DeclModifierSyntax(name: .keyword(.static)),
+      DeclModifierSyntax(name: .keyword(.private)),
+    ],
+    Keyword.let,
+    name: PatternSyntax("_\(raw: key)"),
+    type:  TypeAnnotationSyntax(
+      type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
+    ),
+    initializer: InitializerClauseSyntax(value: arrayExpr(elements: encodedData))
   )
 }
 
