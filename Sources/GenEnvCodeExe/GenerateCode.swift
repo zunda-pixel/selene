@@ -87,30 +87,33 @@ func privateKeyVariableKey(key: String, value: String, cipher: [UInt8]) -> some 
 
 func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
   VariableDeclSyntax(
-    modifiers: .init(arrayLiteral: .init(name: Token.static), .init(name: Token.public)),
-    letOrVarKeyword: Token.var,
-    bindings: .init(itemsBuilder: {
-      PatternBinding(
+    modifiers: [
+      DeclModifierSyntax(name: .keyword(.static)),
+      DeclModifierSyntax(name: .keyword(.public))
+    ],
+    bindingSpecifier: .keyword(.var),
+    bindings: [
+      PatternBindingSyntax(
         pattern: PatternSyntax(stringLiteral: key),
-        typeAnnotation: TypeAnnotation(
+        typeAnnotation: TypeAnnotationSyntax(
           type: TypeSyntax("String")
         ),
-        accessor: .getter(CodeBlock {
-          FunctionCallExpr(callee: IdentifierExprSyntax("string")) {
-            TupleExprElementSyntax(
-              label: .identifier("data"),
-              colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("_\(key)"))
-            )
-            TupleExprElementSyntax(
-              label: .identifier("cipher"),
-              colon: .colonToken(),
-              expression: IdentifierExprSyntax(identifier: .identifier("cipher"))
-            )
-          }
-        })
+        accessorBlock: AccessorBlockSyntax(accessors: .getter(CodeBlockItemListSyntax {
+            FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("string"))) {
+              LabeledExprSyntax(
+                label: .identifier("data"),
+                colon: .colonToken(),
+                expression: DeclReferenceExprSyntax(baseName: .identifier("_\(key)"))
+              )
+              LabeledExprSyntax(
+                label: .identifier("cipher"),
+                colon: .colonToken(),
+                expression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))
+              )
+            }
+        }))
       )
-    })
+    ]
   )
 }
 
