@@ -212,64 +212,63 @@ func stringFunction() -> some DeclSyntaxProtocol {
 
 func encodeDataFunction() -> some DeclSyntaxProtocol {
   FunctionDeclSyntax(
-    modifiers: [DeclModifierSyntax(name: .static), DeclModifierSyntax(name: .private)],
-    identifier: TokenSyntax.identifier("encodeData"),
+    modifiers: [
+      DeclModifierSyntax(name: .keyword(.static)),
+      DeclModifierSyntax(name: .keyword(.private)),
+    ],
+    name: .identifier("encodeData"),
     signature: FunctionSignatureSyntax(
-      input: ParameterClauseSyntax(
-        parameterList: FunctionParameterListSyntax {
-          FunctionParameterSyntax(
-            firstName: TokenSyntax.identifier("data"),
-            colon: .colonToken(),
-            type: TypeSyntax("[UInt8]")
-          )
-          FunctionParameterSyntax(
-            firstName: TokenSyntax.identifier("cipher"),
-            colon: .colonToken(),
-            type: TypeSyntax("[UInt8]")
-          )
-        }
-      ),
-      output: ReturnClauseSyntax(
-        returnType: SimpleTypeIdentifierSyntax(name: TokenSyntax.identifier("[UInt8]"))
+      parameterClause: FunctionParameterClauseSyntax {
+        FunctionParameterSyntax(
+          firstName: .identifier("data"),
+          colon: .colonToken(),
+          type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
+        )
+        FunctionParameterSyntax(
+          firstName: .identifier("cipher"),
+          colon: .colonToken(),
+          type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
+        )
+      },
+      returnClause: ReturnClauseSyntax(
+        type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
       )
     )
   ) {
     FunctionCallExprSyntax(
       calledExpression: MemberAccessExprSyntax(
-        base: .init(FunctionCallExprSyntax(
-          calledExpression: MemberAccessExprSyntax(
-            base: .init(stringLiteral: "data"),
+        base: FunctionCallExprSyntax(
+          callee: MemberAccessExprSyntax(
+            base: DeclReferenceExprSyntax(baseName: .identifier("data")),
             name: "indexed"
-          ),
-          leftParen: .identifier("("),
-          rightParen: .identifier(")")
-        )),
+          )
+        ),
         name: "map"
       ),
+      arguments: LabeledExprListSyntax([]),
       trailingClosure: ClosureExprSyntax(
-        signature: .init(
-          input: .simpleInput(.init([
-            .init(name: .identifier("offset"), trailingComma: .commaToken(trailingTrivia: .space)),
-            .init(name: .identifier("element"))
-          ])),
-          inTok: .inKeyword(leadingTrivia: .space)
+        signature: ClosureSignatureSyntax(
+          parameterClause: .simpleInput(
+            ClosureShorthandParameterListSyntax {
+              ClosureShorthandParameterSyntax(name: .identifier("offset"))
+              ClosureShorthandParameterSyntax(name: .identifier("element"))
+            }
+          )
         ),
         statements: CodeBlockItemListSyntax {
           ReturnStmtSyntax(
             expression: SequenceExprSyntax {
-              ExprListSyntax {
-                IdentifierExprSyntax(identifier: .identifier("element"))
-                BinaryOperatorExprSyntax(operatorToken: TokenSyntax.identifier("^"))
-                SubscriptExprSyntax(
-                  calledExpression: IdentifierExprSyntax(identifier: .identifier("cipher")),
-                  argumentList: TupleExprElementListSyntax([.init(expression: SequenceExprSyntax {
-                    ExprListSyntax {
-                      IdentifierExprSyntax(identifier: .identifier("offset"))
-                      BinaryOperatorExprSyntax(operatorToken: TokenSyntax.spacedBinaryOperator("%"))
-                      MemberAccessExprSyntax(base: .init(stringLiteral: "cipher"), name: "count")
-                    }
-                  })])
-                )
+              DeclReferenceExprSyntax(baseName: .identifier("element"))
+              BinaryOperatorExprSyntax(text: "^")
+              SubscriptCallExprSyntax(calledExpression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))) {
+                LabeledExprListSyntax([.init(expression: SequenceExprSyntax {
+                  DeclReferenceExprSyntax(baseName: .identifier("offset"))
+                  BinaryOperatorExprSyntax(text: "%")
+                  MemberAccessExprSyntax(
+                    base: DeclReferenceExprSyntax(baseName: .identifier("cipher")),
+                    name: "count"
+                  )
+                })])
               }
             }
           )
