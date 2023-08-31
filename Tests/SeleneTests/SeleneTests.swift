@@ -1,7 +1,7 @@
 import XCTest
-@testable import GenEnvCodeExe
+@testable import Selene
 
-final class GenEnvCodeTests: XCTestCase {
+final class SeleneTests: XCTestCase {
   func testEncodeAndDecode() {
     let cipher: [UInt8] = generateCipher(count: 64)
     let input = "Hello"
@@ -50,6 +50,15 @@ key2=value2
     XCTAssertEqual(exprSyntax.formatted().description, "[0x1, 0x2, 0x3, 0x4]")
   }
   
+  func testPrivateKeyVariableKey() {
+    let variable = privateKeyVariableKey(key: "key", value: "value", cipher: [0x01, 0x02])
+    
+    XCTAssertEqual(
+      variable.formatted().description,
+      "static private let _key: [UInt8] = [0x77, 0x63, 0x6d, 0x77, 0x64]"
+    )
+  }
+  
   func testPublicKeyVariableKey() {
     let variable = publicKeyVariableKey(key: "testKey")
     
@@ -68,6 +77,46 @@ static public var testKey: String {
     XCTAssertEqual(
       variable.formatted().description,
       "static private let cipher: [UInt8] = [0x1, 0x2, 0x3, 0x4]"
+    )
+  }
+  
+  func testEncodeDataFunction() {
+    XCTAssertEqual(
+      encodeDataFunction().formatted().description,
+    """
+static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+    data.indexed().map { offset, element in
+        return element ^ cipher[offset % cipher.count]
+    }
+}
+"""
+      )
+  }
+  
+  func testSourceFunction() {
+    let source = source(
+      namespace: "SecureEnv",
+      cipher: [],
+      envValues: [:]
+    )
+    
+    XCTAssertEqual(
+      source.formatted().description,
+      """
+import Algorithms
+import Foundation
+public enum SecureEnv {
+    static private let cipher: [UInt8] = []
+    static private func string(data: [UInt8], cipher: [UInt8]) -> String {
+        String.init(decoding: encodeData(data: data, cipher: cipher), as: UTF8.self)
+    }
+    static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+        data.indexed().map { offset, element in
+            return element ^ cipher[offset % cipher.count]
+        }
+    }
+}
+"""
     )
   }
 }
