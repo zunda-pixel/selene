@@ -50,6 +50,15 @@ key2=value2
     XCTAssertEqual(exprSyntax.formatted().description, "[0x1, 0x2, 0x3, 0x4]")
   }
   
+  func testPrivateKeyVariableKey() {
+    let variable = privateKeyVariableKey(key: "key", value: "value", cipher: [0x01, 0x02])
+    
+    XCTAssertEqual(
+      variable.formatted().description,
+      "static private let _key: [UInt8] = [0x77, 0x63, 0x6d, 0x77, 0x64]"
+    )
+  }
+  
   func testPublicKeyVariableKey() {
     let variable = publicKeyVariableKey(key: "testKey")
     
