@@ -5,7 +5,7 @@ import SwiftSyntaxBuilder
 import ArgumentParser
 
 @main
-struct GenerateCode: ParsableCommand {
+struct Selene: ParsableCommand {
   @Argument(help: "Generating Namespace(ex: SecureEnv).")
   var namespace: String
 
