@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "GenEnvCode",
+  name: "Selene",
   platforms: [
     .iOS(.v13),
     .macOS(.v10_15)
@@ -12,12 +12,12 @@ let package = Package(
   products: [
     // Products define the executables and libraries a package produces, and make them visible to other packages.
     .plugin(
-      name: "GenEnvCode",
-      targets: ["GenEnvCode"]
+      name: "GenerateCode",
+      targets: ["GenerateCode"]
     ),
     .executable(
-      name: "GenEnvCodeExe",
-      targets: ["GenEnvCodeExe"]
+      name: "Selene",
+      targets: ["Selene"]
     ),
   ],
   dependencies: [
@@ -27,16 +27,16 @@ let package = Package(
   ],
   targets: [
     .plugin(
-      name: "GenEnvCode",
+      name: "GenerateCode",
       capability: .command(
-        intent: .custom(verb: "generate-env", description: "Generate Source Code from Env File")
+        intent: .custom(verb: "generate-env-code", description: "Generate Source Code from Env File")
       ),
       dependencies: [
-        .target(name: "GenEnvCodeExe"),
+        .target(name: "Selene"),
       ]
     ),
     .executableTarget(
-      name: "GenEnvCodeExe",
+      name: "Selene",
       dependencies: [
         .product(name: "Algorithms", package: "swift-algorithms"),
         .product(name: "SwiftSyntax", package: "swift-syntax"),
@@ -45,9 +45,9 @@ let package = Package(
       ]
     ),
     .testTarget(
-      name: "GenEnvCodeTests",
+      name: "SeleneTests",
       dependencies: [
-        .target(name: "GenEnvCodeExe"),
+        .target(name: "Selene"),
       ]
     )
   ]

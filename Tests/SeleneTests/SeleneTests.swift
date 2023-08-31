@@ -1,7 +1,7 @@
 import XCTest
-@testable import GenEnvCodeExe
+@testable import Selene
 
-final class GenEnvCodeTests: XCTestCase {
+final class SeleneTests: XCTestCase {
   func testEncodeAndDecode() {
     let cipher: [UInt8] = generateCipher(count: 64)
     let input = "Hello"
