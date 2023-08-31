@@ -168,12 +168,10 @@ func stringFunction() -> some DeclSyntaxProtocol {
         parameters: FunctionParameterListSyntax {
           FunctionParameterSyntax(
             firstName: TokenSyntax.identifier("data"),
-            colon: .colonToken(),
             type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
           )
           FunctionParameterSyntax(
             firstName: TokenSyntax.identifier("cipher"),
-            colon: .colonToken(),
             type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
           )
         }
@@ -185,28 +183,23 @@ func stringFunction() -> some DeclSyntaxProtocol {
   ) {
     FunctionCallExprSyntax(callee: MemberAccessExprSyntax(
       base: DeclReferenceExprSyntax(baseName: .identifier("String")),
-      period: .periodToken(),
       name: .identifier("init")
     )) {
       LabeledExprSyntax(
         label: "decoding",
-        colon: .colonToken(),
         expression: FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("encodeData"))) {
           LabeledExprSyntax(
             label: "data",
-            colon: .colonToken(),
             expression: DeclReferenceExprSyntax(baseName: .identifier("data"))
           )
           LabeledExprSyntax(
             label: "cipher",
-            colon: .colonToken(),
             expression: DeclReferenceExprSyntax(baseName: .identifier("cipher"))
           )
         }
       )
       LabeledExprSyntax(
         label: "as",
-        colon: .colonToken(),
         expression: DeclReferenceExprSyntax(baseName: .identifier("UTF8.self"))
       )
     }
@@ -224,12 +217,10 @@ func encodeDataFunction() -> some DeclSyntaxProtocol {
       parameterClause: FunctionParameterClauseSyntax {
         FunctionParameterSyntax(
           firstName: .identifier("data"),
-          colon: .colonToken(),
           type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
         )
         FunctionParameterSyntax(
           firstName: .identifier("cipher"),
-          colon: .colonToken(),
           type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
         )
       },
