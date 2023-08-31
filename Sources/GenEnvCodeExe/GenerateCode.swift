@@ -76,7 +76,7 @@ func privateKeyVariableKey(key: String, value: String, cipher: [UInt8]) -> some 
       DeclModifierSyntax(name: .keyword(.private)),
     ],
     Keyword.let,
-    name: PatternSyntax("_\(raw: key)"),
+    name: PatternSyntax(IdentifierPatternSyntax(identifier: .identifier("_\(key)"))),
     type:  TypeAnnotationSyntax(
       type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))
     ),
@@ -93,7 +93,7 @@ func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
     bindingSpecifier: .keyword(.var)
   ) {
     PatternBindingSyntax(
-      pattern: PatternSyntax(stringLiteral: key),
+      pattern: PatternSyntax(IdentifierPatternSyntax(identifier: .identifier(key))),
       typeAnnotation: TypeAnnotationSyntax(type: TypeSyntax("String")),
       accessorBlock: AccessorBlockSyntax(accessors: .getter(CodeBlockItemListSyntax {
         FunctionCallExprSyntax(callee: DeclReferenceExprSyntax(baseName: .identifier("string"))) {
@@ -150,7 +150,7 @@ func cipherVariable(cipher: [UInt8]) -> some DeclSyntaxProtocol {
       DeclModifierSyntax(name: .keyword(.private))
     ],
     Keyword.let,
-    name: PatternSyntax(stringLiteral: "cipher"),
+    name: PatternSyntax(IdentifierPatternSyntax(identifier: .identifier("cipher"))),
     type: TypeAnnotationSyntax(type: ArrayTypeSyntax(element: TypeSyntax("UInt8"))),
     initializer: InitializerClauseSyntax(value: arrayExpr(elements: cipher))
   )
