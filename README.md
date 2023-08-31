@@ -1,19 +1,19 @@
-# GenEnvCode
+# Selene
 
-`GenEnvCode` is generating obfuscated code for Secure Key/Value
+`Selene` is generating obfuscated code for Secure Key/Value
 
-## Adding GenEnvCode as a Dependency
+## Adding Selene as a Dependency
 
-To use the `GenEnvCode` plugin in a SwiftPM project, 
+To use the `Selene` plugin in a SwiftPM project, 
 add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/zunda-pixel/GenEnvCode", from: "1.0.0"),
+.package(url: "https://github.com/zunda-pixel/selene", from: "1.0.0"),
 ```
 
-## Use GenEnvCode on XcodeCloud
+## Use Selene on XcodeCloud
 
-1. add GenEnvCode as a Dependency
+1. add Selene as a Dependency
 2. set Secure Key/Value on Xcode Cloud `Environment Variable`
 
 <img width="500" alt="xcode-cloud-environment-sample" src="https://github.com/zunda-pixel/GenEnvCode/assets/47569369/09753556-f470-4ecd-b1e5-3aa00fa1f81f">
@@ -41,7 +41,7 @@ EOL
 
 cd path/to/directory/on/Package.swift
 
-swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env {namespace(ex: Env)} {path/to/env_file} {path/to/GeneratingEnv.swift}
+swift package plugin --allow-writing-to-directory path/to/directory/on/file generate-env-code {namespace(ex: Env)} {path/to/env_file} {path/to/GeneratingEnv.swift}
 ```
 
 4. use Secure Value in Project
