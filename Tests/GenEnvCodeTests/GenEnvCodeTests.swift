@@ -70,4 +70,30 @@ static public var testKey: String {
       "static private let cipher: [UInt8] = [0x1, 0x2, 0x3, 0x4]"
     )
   }
+  func testSourceFunction() {
+    let source = source(
+      namespace: "SecureEnv",
+      cipher: [],
+      envValues: [:]
+    )
+    
+    XCTAssertEqual(
+      source.formatted().description,
+      """
+import Algorithms
+import Foundation
+public enum SecureEnv {
+    static private let cipher: [UInt8] = []
+    static private func string(data: [UInt8], cipher: [UInt8]) -> String {
+        String.init(decoding: encodeData(data: data, cipher: cipher), as: UTF8.self)
+    }
+    static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+        data.indexed().map { offset, element in
+            return element ^ cipher[offset % cipher.count]
+        }
+    }
+}
+"""
+    )
+  }
 }
