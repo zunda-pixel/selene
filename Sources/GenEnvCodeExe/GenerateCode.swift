@@ -116,27 +116,30 @@ func publicKeyVariableKey(key: String) -> VariableDeclSyntax {
 func source(namespace: String, cipher: [UInt8], envValues: [String: String]) -> SourceFileSyntax {
   SourceFileSyntax {
     for name in ["Algorithms", "Foundation"] {
-      ImportDeclSyntax(path: AccessPathSyntax([AccessPathComponentSyntax(name: name)]))
+      ImportDeclSyntax(
+        path: ImportPathComponentListSyntax { ImportPathComponentSyntax(name: .identifier(name)) }
+      )
     }
     
     EnumDeclSyntax(
-      modifiers: [DeclModifierSyntax(name: .public)],
-      identifier: namespace
-    ) {
-      cipherVariable(cipher: cipher)
-      
-      for (key, value) in envValues {
-        privateKeyVariableKey(key: key, value: value, cipher: cipher)
+      modifiers: [DeclModifierSyntax(name: .keyword(.public))],
+      name: .identifier(namespace),
+      memberBlock: MemberBlockSyntax {
+        cipherVariable(cipher: cipher)
+        
+        for (key, value) in envValues {
+          privateKeyVariableKey(key: key, value: value, cipher: cipher)
+        }
+        
+        for item in envValues {
+          publicKeyVariableKey(key: item.key)
+        }
+        
+        stringFunction()
+        
+        encodeDataFunction()
       }
-      
-      for item in envValues {
-        publicKeyVariableKey(key: item.key)
-      }
-      
-      stringFunction()
-      
-      encodeDataFunction()
-    }
+    )
   }
 }
 
