@@ -36,12 +36,21 @@ final class SeleneTests: XCTestCase {
   func testEnvironmentValues() {
     let content = """
 key1=value1
+#comment
 key2=value2
+key3=value3=value3
 """
     
     let values: [String: String] = environmentValues(content: content)
   
-    XCTAssertEqual(values, ["key1": "value1", "key2": "value2"])
+    XCTAssertEqual(
+      values,
+      [
+        "key1": "value1",
+        "key2": "value2",
+        "key3": "value3=value3",
+      ]
+    )
   }
   
   func testArrayExpr() {
