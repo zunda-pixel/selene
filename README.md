@@ -1,6 +1,8 @@
 # Selene
 
-`Selene` is generating obfuscated code for Secure Key/Value
+`Selene` is generating obfuscated code for secret Key/Value
+
+https://nshipster.com/secrets/
 
 ## Sample
 
@@ -10,7 +12,7 @@
 import Algorithms
 import Foundation
 
-public enum SecureEnv {
+public enum SecretEnv {
   static private let cipher: [UInt8] = [
     0xbe, 0xfe, 0x73, 0xe5, 0xaf, 0x1b, 0x5d, 0xe, 0xae, 0x22, 0x6a, 0x19, 0xcc, 0xdb, 0x9, 0x96,
     0x33, 0xbf, 0x4c, 0x48, 0x6b, 0x47, 0xf, 0x50, 0x75, 0x93, 0x7e, 0x6b, 0x6e, 0x4a, 0x64, 0xed,
@@ -39,9 +41,8 @@ public enum SecureEnv {
 </details>
 
 ```swift
-print(SecureEnv.clientID)
+print(SecretEnv.clientID)
 ```
-
 
 ## Adding Selene as a Dependency
 
@@ -60,7 +61,7 @@ add the following line to the dependencies in your `Package.swift` file:
 .package(url: "https://github.com/apple/swift-algorithms", from: "1.0.0"),
 ```
 
-2. set Secure Key/Value on Xcode Cloud `Environment Variable`
+2. set Secret Key/Value on Xcode Cloud `Environment Variable`
 
 <img width="500" alt="xcode-cloud-environment-sample" src="https://github.com/zunda-pixel/GenEnvCode/assets/47569369/09753556-f470-4ecd-b1e5-3aa00fa1f81f">
 
@@ -85,16 +86,16 @@ clientID=${CLIENT_ID}
 clientSecret=${CLIENT_SECRET}
 EOL
 
-selene {namespace(ex: SecureEnv)} .env {path/to/GeneratingEnv.swift}
-# Ex. selene SecureEnv .env /Sources/Env/SecureEnv.swift
+selene {namespace(ex: SecretEnv)} .env {path/to/GeneratingEnv.swift}
+# Ex. selene SecretEnv .env /Sources/Env/SecretEnv.swift
 ```
 
-4. use Secure Value in Project
+4. use Secert Value in Project
 
 ```swift
 print({set namespace}.clientID)
-print(SecureEnv.clientID)
-print(SecureEnv.clientSecret)
+print(SecretEnv.clientID)
+print(SecretEnv.clientSecret)
 ```
 
 ## Use Selene on Local
@@ -127,14 +128,14 @@ key3=value3=value3
 4. execute `Selene`
 
 ```shell
-selene {namespace(ex: SecureEnv)} {path/to/env_file} {path/to/GeneratingEnv.swift}
-# Ex. selene SecureEnv .env SecureEnv.swift
+selene {namespace(ex: SecretEnv)} {path/to/env_file} {path/to/GeneratingEnv.swift}
+# Ex. selene SecretEnv .env SecretEnv.swift
 ```
 
-5. use Secure Value in Project
+5. use Secret Value in Project
 
 ```swift
 print({set namespace}.clientID)
-print(SecureEnv.clientID)
-print(SecureEnv.clientSecret)
+print(SecretEnv.clientID)
+print(SecretEnv.clientSecret)
 ```
