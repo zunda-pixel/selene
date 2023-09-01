@@ -10,6 +10,23 @@ add the following line to the dependencies in your `Package.swift` file:
 ```swift
 .package(url: "https://github.com/zunda-pixel/selene", from: "1.1.0"),
 ```
+## Use Selene on Local
+
+1. add Selene as a Dependency
+2. add `.env` file
+
+```txt
+key1=value1
+#comment
+key2=value2
+key3=value3=value3
+```
+3. execute `generate-env-code`
+
+```shell
+swift package plugin --allow-writing-to-directory {path/to/directory/on/file} generate-env-code {namespace(ex: Env)} {path/to/env_file} {path/to/GeneratingEnv.swift}
+
+```
 
 ## Use Selene on XcodeCloud
 

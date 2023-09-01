@@ -18,7 +18,7 @@ let package = Package(
       targets: ["GenerateCode"]
     ),
     .executable(
-      name: "Selene",
+      name: "selene",
       targets: ["Selene"]
     ),
   ],
@@ -31,7 +31,10 @@ let package = Package(
     .plugin(
       name: "GenerateCode",
       capability: .command(
-        intent: .custom(verb: "generate-env-code", description: "Generate Source Code from Env File")
+        intent: .custom(
+          verb: "generate-env-code",
+          description: "Generate Source Code from Env File"
+        )
       ),
       dependencies: [
         .target(name: "Selene"),
