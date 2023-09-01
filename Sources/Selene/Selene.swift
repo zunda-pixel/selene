@@ -40,16 +40,26 @@ func generateCipher(count: Int) -> [UInt8] {
 }
 
 func environmentValues(content: String) -> [String: String] {
-  let lines = content.split(whereSeparator: \.isNewline)
+  let lines = content.split(whereSeparator: \.isNewline).filter {
+    !$0.hasPrefix("#") // ignore comment out
+  }
 
   let environmentValues: [String: String] = lines.reduce(into: [:]) { dictionary, line in
-    let values = line.split(separator: "=")
-    let key = String(values[0])
-    let value = String(values[1])
-    dictionary[key] = value
+    let values = line.split(separator: "=", maxSplits: 1)
+    guard let key = values[safe: 0],
+          let value = values[safe: 1] else {
+      return
+    }
+    dictionary[String(key)] = String(value)
   }
   
   return environmentValues
+}
+
+extension Array {
+  subscript(safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
+  }
 }
 
 func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
