@@ -104,7 +104,7 @@ static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
   
   func testSourceFunction() {
     let source = source(
-      namespace: "SecureEnv",
+      namespace: "SecretEnv",
       cipher: [],
       envValues: [:]
     )
@@ -114,7 +114,7 @@ static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
       """
 import Algorithms
 import Foundation
-public enum SecureEnv {
+public enum SecretEnv {
     static private let cipher: [UInt8] = []
     static private func string(data: [UInt8], cipher: [UInt8]) -> String {
         String.init(decoding: encodeData(data: data, cipher: cipher), as: UTF8.self)

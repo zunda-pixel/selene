@@ -6,7 +6,7 @@ import ArgumentParser
 
 @main
 struct Selene: ParsableCommand {
-  @Argument(help: "Generating Namespace(ex: SecureEnv).")
+  @Argument(help: "Generating Namespace(Ex: SecretEnv).")
   var namespace: String
 
   @Argument(help: "Env file path.")
