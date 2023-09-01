@@ -100,7 +100,7 @@ print(SecureEnv.clientSecret)
 ## Use Selene on Local
 
 > **Warning**
-> DO NOT COMMIT GENERATED CODE
+> *DO NOT COMMIT GENERATED CODE*
 
 1. add swift-algorithms as a Dependency
 
