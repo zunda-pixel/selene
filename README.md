@@ -8,7 +8,7 @@ To use the `Selene` plugin in a SwiftPM project,
 add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/zunda-pixel/selene", from: "1.0.0"),
+.package(url: "https://github.com/zunda-pixel/selene", from: "1.1.0"),
 ```
 
 ## Use Selene on XcodeCloud
