@@ -53,6 +53,7 @@ let package = Package(
       name: "SeleneTests",
       dependencies: [
         .target(name: "Selene"),
+        .product(name: "SwiftParser", package: "swift-syntax"),
       ]
     )
   ]
