@@ -1,5 +1,7 @@
 import XCTest
 @testable import Selene
+import SwiftParser
+import SwiftSyntax
 
 final class SeleneTests: XCTestCase {
   func testEncodeAndDecode() {
@@ -53,27 +55,37 @@ key3=value3=value3
     )
   }
   
+  func assertSyntax(syntax: some SyntaxProtocol, source: String) {
+    XCTAssertEqual(
+      Parser.parse(source: syntax.formatted().description).debugDescription,
+      Parser.parse(source: source).debugDescription
+    )
+  }
+  
   func testArrayExpr() {
-    let exprSyntax = arrayExpr(elements: [0x01, 0x02, 0x03, 0x04])
+    let arrayExprSyntax = arrayExpr(elements: [0x1, 0x2, 0x3, 0x4])
     
-    XCTAssertEqual(exprSyntax.formatted().description, "[0x1, 0x2, 0x3, 0x4]")
+    assertSyntax(
+      syntax: arrayExprSyntax,
+      source: "[0x1, 0x2, 0x3, 0x4]"
+    )
   }
   
   func testPrivateKeyVariableKey() {
     let variable = privateKeyVariableKey(key: "key", value: "value", cipher: [0x01, 0x02])
     
-    XCTAssertEqual(
-      variable.formatted().description,
-      "static private let _key: [UInt8] = [0x77, 0x63, 0x6d, 0x77, 0x64]"
+    assertSyntax(
+      syntax: variable,
+      source: "static private let _key: [UInt8] = [0x77, 0x63, 0x6d, 0x77, 0x64]"
     )
   }
   
   func testPublicKeyVariableKey() {
     let variable = publicKeyVariableKey(key: "testKey")
     
-    XCTAssertEqual(
-      variable.formatted().description,
-"""
+    assertSyntax(
+      syntax: variable,
+      source: """
 static public var testKey: String {
     string(data: _testKey, cipher: cipher)
 }
@@ -82,24 +94,24 @@ static public var testKey: String {
   }
   
   func testCipherVariable() {
-    let variable = cipherVariable(cipher: [0x01, 0x02, 0x03, 0x04])
-    XCTAssertEqual(
-      variable.formatted().description,
-      "static private let cipher: [UInt8] = [0x1, 0x2, 0x3, 0x4]"
+    let variable = cipherVariable(cipher: [0x1, 0x2, 0x3, 0x4])
+    assertSyntax(
+      syntax: variable,
+      source: "static private let cipher: [UInt8] = [0x1, 0x2, 0x3, 0x4]"
     )
   }
   
   func testEncodeDataFunction() {
-    XCTAssertEqual(
-      encodeDataFunction().formatted().description,
-    """
+    assertSyntax(
+      syntax: encodeDataFunction(),
+      source: """
 static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
     data.indexed().map { offset, element in
         return element ^ cipher[offset % cipher.count]
     }
 }
 """
-      )
+    )
   }
   
   func testSourceFunction() {
@@ -109,9 +121,9 @@ static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
       envValues: [:]
     )
     
-    XCTAssertEqual(
-      source.formatted().description,
-      """
+    assertSyntax(
+      syntax: source,
+      source: """
 import Algorithms
 import Foundation
 public enum SecretEnv {

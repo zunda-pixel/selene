@@ -65,7 +65,7 @@ extension Array {
 func arrayExpr(elements: [UInt8]) -> some ExprSyntaxProtocol {
   ArrayExprSyntax {
     for element in elements {
-      ArrayElementSyntax(expression: IntegerLiteralExprSyntax(literal: .identifier(String(format: "0x%x", element))))
+      ArrayElementSyntax(expression: IntegerLiteralExprSyntax(literal: .integerLiteral(String(format: "0x%x", element))))
     }
   }
 }
