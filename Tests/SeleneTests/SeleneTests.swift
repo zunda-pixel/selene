@@ -57,8 +57,8 @@ key3=value3=value3
   
   func assertSyntax(syntax: some SyntaxProtocol, source: String) {
     XCTAssertEqual(
-      Parser.parse(source: syntax.formatted().description).formatted().description,
-      Parser.parse(source: source).formatted().description
+      Parser.parse(source: syntax.formatted().description).debugDescription,
+      Parser.parse(source: source).debugDescription
     )
   }
   
