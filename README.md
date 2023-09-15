@@ -50,7 +50,7 @@ To use the `Selene` plugin in a SwiftPM project,
 add the following line to the dependencies in your `Package.swift` file:
 
 ```swift
-.package(url: "https://github.com/zunda-pixel/selene", from: "1.1.0"),
+.package(url: "https://github.com/zunda-pixel/selene", from: "1.2.2"),
 ```
 
 ## Use Selene on XcodeCloud
@@ -90,7 +90,7 @@ selene {namespace(ex: SecretEnv)} .env {path/to/GeneratingEnv.swift}
 # Ex. selene SecretEnv .env /Sources/Env/SecretEnv.swift
 ```
 
-4. use Secert Value in Project
+4. use Secret Value in Project
 
 ```swift
 print({set namespace}.clientID)
@@ -106,7 +106,7 @@ print(SecretEnv.clientSecret)
 1. add swift-algorithms as a Dependency
 
 ```swift
-.package(url: "https://github.com/zunda-pixel/selene", from: "1.1.0"),
+.package(url: "https://github.com/zunda-pixel/selene", from: "1.2.2"),
 ```
 
 2. install Selene
