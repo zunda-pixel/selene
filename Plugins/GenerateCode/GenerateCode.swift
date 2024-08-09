@@ -9,10 +9,9 @@ import Foundation
 struct GenerateCode: CommandPlugin {
   func performCommand(context: PackagePlugin.PluginContext, arguments: [String]) async throws {
     let tool = try context.tool(named: "Selene")
-    let toolPath = URL(fileURLWithPath: tool.path.string)
-    
+
     let process = try Process.run(
-      toolPath,
+      tool.url,
       arguments: arguments
     )
     process.waitUntilExit()
