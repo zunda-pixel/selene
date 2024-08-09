@@ -1,5 +1,4 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -23,9 +22,9 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-algorithms", .upToNextMajor(from: "1.0.0")),
-    .package(url: "https://github.com/apple/swift-syntax", .upToNextMajor(from: "509.0.0")),
-    .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMajor(from: "1.2.3")),
+    .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
+    .package(url: "https://github.com/apple/swift-syntax", "509.0.0"..<"601.0.0-prerelease"),
+    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
   ],
   targets: [
     .plugin(
