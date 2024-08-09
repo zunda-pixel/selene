@@ -37,7 +37,7 @@ let package = Package(
         )
       ),
       dependencies: [
-        .target(name: "Selene"),
+        .target(name: "Selene")
       ]
     ),
     .executableTarget(
@@ -56,6 +56,6 @@ let package = Package(
         .product(name: "SwiftParser", package: "swift-syntax"),
         .product(name: "Testing", package: "swift-testing"),
       ]
-    )
+    ),
   ]
 )

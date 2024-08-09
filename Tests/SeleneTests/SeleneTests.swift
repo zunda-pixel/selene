@@ -1,7 +1,8 @@
-import Testing
+import Foundation
 import SwiftParser
 import SwiftSyntax
-import Foundation
+import Testing
+
 @testable import Selene
 
 @Test
@@ -24,14 +25,14 @@ func specifyCipher() {
     0x85, 0, 0xeb, 0x39, 0xfa, 0xad, 0x67, 0x66, 0x42, 0xb7,
     0xab, 0x71, 0x45, 0x20, 0xa7, 0x98, 0x7d, 0xd6, 0x36, 0x9b,
     0xd2, 0x73, 0x3a, 0xac, 0xd8, 0xc5, 0xf4, 0xe1, 0x58, 0xb2,
-    0x64, 0x46, 0x20, 0x2b, 0xa8, 0xeb
+    0x64, 0x46, 0x20, 0x2b, 0xa8, 0xeb,
   ]
 
   let encoded: [UInt8] = [
     0x85, 0x38, 0x8f, 0xc1, 0x55, 0x1f, 0xb3, 0x19, 0xf3,
-    0x1a, 0x1f, 0x5, 0x37, 0xcc, 0xd4, 0xff, 0x13, 0xd2, 0x89, 0xfa
+    0x1a, 0x1f, 0x5, 0x37, 0xcc, 0xd4, 0xff, 0x13, 0xd2, 0x89, 0xfa,
   ]
-  
+
   let decodedData = Selene.encodeData(encoded, cipher: cipher)
   let output = String(decoding: decodedData, as: UTF8.self)
   #expect("K432dvFuaiXDb5byjxjd" == output)
@@ -40,17 +41,16 @@ func specifyCipher() {
 @Test
 func environmentValues() {
   let content = """
-key1=value1
-#comment
-key2=value2
-key3=value3=value3
-"""
-  
+    key1=value1
+    #comment
+    key2=value2
+    key3=value3=value3
+    """
+
   let values: [String: String] = Selene.environmentValues(content: content)
 
   #expect(
-    values ==
-    [
+    values == [
       "key1": "value1",
       "key2": "value2",
       "key3": "value3=value3",
@@ -60,15 +60,15 @@ key3=value3=value3
 
 func assertSyntax(syntax: some SyntaxProtocol, source: String) {
   #expect(
-    Parser.parse(source: syntax.formatted().description).debugDescription ==
-    Parser.parse(source: source).debugDescription
+    Parser.parse(source: syntax.formatted().description).debugDescription
+      == Parser.parse(source: source).debugDescription
   )
 }
 
 @Test
 func arrayExpr() {
   let arrayExprSyntax = Selene.arrayExpr(elements: [0x1, 0x2, 0x3, 0x4])
-  
+
   assertSyntax(
     syntax: arrayExprSyntax,
     source: "[0x1, 0x2, 0x3, 0x4]"
@@ -78,7 +78,7 @@ func arrayExpr() {
 @Test
 func privateKeyVariableKey() {
   let variable = Selene.privateKeyVariableKey(key: "key", value: "value", cipher: [0x01, 0x02])
-  
+
   assertSyntax(
     syntax: variable,
     source: "static private let _key: [UInt8] = [0x77, 0x63, 0x6d, 0x77, 0x64]"
@@ -87,14 +87,14 @@ func privateKeyVariableKey() {
 
 func publicKeyVariableKey() {
   let variable = Selene.publicKeyVariableKey(key: "testKey")
-  
+
   assertSyntax(
     syntax: variable,
     source: """
-static public var testKey: String {
-  string(data: _testKey, cipher: cipher)
-}
-"""
+      static public var testKey: String {
+        string(data: _testKey, cipher: cipher)
+      }
+      """
   )
 }
 
@@ -111,12 +111,12 @@ func encodeDataFunction() {
   assertSyntax(
     syntax: Selene.encodeDataFunction(),
     source: """
-static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
-  data.indexed().map { offset, element in
-      return element ^ cipher[offset % cipher.count]
-  }
-}
-"""
+      static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+        data.indexed().map { offset, element in
+            return element ^ cipher[offset % cipher.count]
+        }
+      }
+      """
   )
 }
 
@@ -127,23 +127,23 @@ func sourceFunction() {
     cipher: [],
     envValues: [:]
   )
-  
+
   assertSyntax(
     syntax: source,
     source: """
-import Algorithms
-import Foundation
-public enum SecretEnv {
-  static private let cipher: [UInt8] = []
-  static private func string(data: [UInt8], cipher: [UInt8]) -> String {
-      String.init(decoding: encodeData(data: data, cipher: cipher), as: UTF8.self)
-  }
-  static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
-      data.indexed().map { offset, element in
-          return element ^ cipher[offset % cipher.count]
+      import Algorithms
+      import Foundation
+      public enum SecretEnv {
+        static private let cipher: [UInt8] = []
+        static private func string(data: [UInt8], cipher: [UInt8]) -> String {
+            String.init(decoding: encodeData(data: data, cipher: cipher), as: UTF8.self)
+        }
+        static private func encodeData(data: [UInt8], cipher: [UInt8]) -> [UInt8] {
+            data.indexed().map { offset, element in
+                return element ^ cipher[offset % cipher.count]
+            }
+        }
       }
-  }
-}
-"""
+      """
   )
 }
