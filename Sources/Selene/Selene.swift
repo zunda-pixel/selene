@@ -18,8 +18,8 @@ struct Selene: ParsableCommand {
   mutating func run() throws {
     let envFilePath = URL(fileURLWithPath: self.envFilePath, isDirectory: false)
     let outputFilePath = URL(fileURLWithPath: self.outputFilePath, isDirectory: false)
-
-    let envFileContent = try String(contentsOf: envFilePath)
+    let envFileContentData = try Data(contentsOf: envFilePath)
+    let envFileContent = String(decoding: envFileContentData, as: UTF8.self)
 
     let environmentValues: [String: String] = Self.environmentValues(content: envFileContent)
 
